@@ -10,6 +10,26 @@ never loads.
 Everything is Foundation-only (`SRView` stands in for `UIView`), so it runs with
 `swift test` on macOS.
 
+## How to run
+
+**In Xcode (demo app + tests):**
+
+1. Open `Demo/Demo.xcodeproj` (Xcode resolves the local `StaleRedraw` package from the repo root).
+2. Pick any iPhone simulator (iOS 17+) and press **Cmd+R**. No signing team is needed for the simulator.
+3. Wait for the card to show "Ada / London", then tap **Done (clear + re-enter page)**.
+   - **Naive**: about a second later the card is still on `N/A` and the status turns red. The
+     log shows two `redraw tag 100` lines that ran after the re-entry, and the stats show two load
+     requests skipped as "already in flight": the response went to a page no longer on screen.
+   - **Fixed**: the card shows "Ada / London" again. The log shows two `drop stale redraw` lines.
+   - Switch the **Naive / Fixed** segment to reset the page with the other redrawer.
+4. Press **Cmd+U** to run the package tests (`StaleRedrawTests`) on the simulator from the same `Demo` scheme.
+
+**From the command line:** the library is Foundation-only, so `swift test` runs the same tests on macOS:
+
+```bash
+swift test
+```
+
 ## The setup
 
 - Screens are built from a description. Every page build numbers its views
@@ -58,8 +78,9 @@ NSUInteger generation = registry.pageBuildGeneration;
 - `Sources/StaleRedraw/SRRedrawer.m` - `SRNaiveRedrawer` (bug) and `SRFixedRedrawer` (fix)
 - `Tests/StaleRedrawTests/StaleRedrawTests.swift` - `test_naive_*` tests pin the
   broken behaviour, `test_fixed_*` tests pin the fix
+- `Demo/` - UIKit demo app (`project.yml` for XcodeGen, generated `Demo.xcodeproj`)
 
-## Run the tests
+## Run the tests (command line)
 
 ```bash
 swift test

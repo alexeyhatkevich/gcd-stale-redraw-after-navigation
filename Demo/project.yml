@@ -1,0 +1,54 @@
+name: Demo
+options:
+  bundleIdPrefix: com.alexeyhatkevich.gcd-stale-redraw-after-navigation
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+packages:
+  StaleRedraw:
+    path: ..
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGNING_ALLOWED: "NO"
+    DEVELOPMENT_TEAM: ""
+targets:
+  Demo:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    dependencies:
+      - package: StaleRedraw
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Stale Redraw
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alexeyhatkevich.gcd-stale-redraw-after-navigation.demo
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: "NO"
+schemes:
+  Demo:
+    build:
+      targets:
+        Demo: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - package: StaleRedraw/StaleRedrawTests
