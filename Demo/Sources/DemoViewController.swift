@@ -36,11 +36,18 @@ final class DemoViewController: UIViewController {
 
     private var mode: Mode { Mode(rawValue: modeControl.selectedSegmentIndex) ?? .naive }
 
+    /// Launch arguments for scripted runs: `-mode fixed` selects the Fixed segment,
+    /// `-autorun 1` taps "Done" once as soon as the first load finishes.
+    private var pendingAutorun = UserDefaults.standard.bool(forKey: "autorun")
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Stale redraw"
         view.backgroundColor = .systemGroupedBackground
         buildUI()
+        if UserDefaults.standard.string(forKey: "mode")?.lowercased() == "fixed" {
+            modeControl.selectedSegmentIndex = Mode.fixed.rawValue
+        }
         resetPage()
     }
 
@@ -59,6 +66,10 @@ final class DemoViewController: UIViewController {
         completeLoad(after: responseDelay, run: runID) { [weak self] in
             self?.setStatus("Page loaded. Now tap \"Done\".", color: .secondaryLabel)
             self?.doneButton.isEnabled = true
+            if self?.pendingAutorun == true {
+                self?.pendingAutorun = false
+                self?.tapDone()
+            }
         }
     }
 

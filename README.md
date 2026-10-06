@@ -22,6 +22,10 @@ Everything is Foundation-only (`SRView` stands in for `UIView`), so it runs with
      requests skipped as "already in flight": the response went to a page no longer on screen.
    - **Fixed**: the card shows "Ada / London" again. The log shows two `drop stale redraw` lines.
    - Switch the **Naive / Fixed** segment to reset the page with the other redrawer.
+   - Scripted run: the app accepts launch arguments `-mode naive|fixed` and `-autorun 1` (taps
+     **Done** once after the first load), e.g.
+     `xcrun simctl launch booted com.alexeyhatkevich.gcd-stale-redraw-after-navigation.demo -mode fixed -autorun 1`.
+     In Xcode, add them under *Edit Scheme > Run > Arguments*.
 4. Press **Cmd+U** to run the package tests (`StaleRedrawTests`) on the simulator from the same `Demo` scheme.
 
 **From the command line:** the library is Foundation-only, so `swift test` runs the same tests on macOS:
